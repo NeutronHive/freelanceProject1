@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import {useParams} from 'react-router-dom'
 import Subject from "./Subject";
 import NewSubjectForm from "./NewSubjectForm";
 import {v1 as uuid} from "uuid"; 
 import "./SubjectList.css";
 import { collection, addDoc, getFirestore, getDocs } from "firebase/firestore";
 import firebaseConfig from "../utils/firebase.config";
-import { useNavigate } from "react-router-dom";
+import Unit from "./Unit";
 const app = firebaseConfig()
 const db = getFirestore(app);
 
 
-async function getSubjects() {
+async function getSubjects(subject) {
+    
   const querySnapshot = await getDocs(collection(db, "topics"));
   const usersArray = [];
 
@@ -25,20 +27,21 @@ async function getSubjects() {
   const farray = [];
   const s = new Set();
   for(let i=0;i<usersArray.length;i++){
-    if(s.has(usersArray[i].data.id.split('-')[0])){
+    if(s.has(usersArray[i].data.id.split('-')[1]) || usersArray[i].data.id.split('-')[0]!=subject){
       continue;
     }
     farray.push(usersArray[i].data);
-    s.add(usersArray[i].data.id.split('-')[0]);
+    s.add(usersArray[i].data.id.split('-')[1]);
   }
   return farray;
 }
 
-function TodoList() {
-  const navigate=useNavigate();
+function UnitList(props) {
+    const { subject } = useParams();
+    console.log(subject);
   const [todos, setTodos] = useState([]);
   useEffect(() => {
-    getSubjects().then((data) => {
+    getSubjects(subject).then((data) => {
       setTodos(data);
     });
   }, []); 
@@ -63,7 +66,12 @@ function TodoList() {
   };
 
   const toggleComplete = async(id) => {
-    navigate(`/${id.split('-')[0]}`)
+    try {
+      const docRef = await addDoc(collection(db, "topics"), todos);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
     return
     // const updatedTodos = todos.map(todo => {
     //   if (todo.id === id) {
@@ -75,7 +83,7 @@ function TodoList() {
   };
 
   const todosList = todos.map(todo => (
-    <Subject
+    <Unit
       toggleComplete={toggleComplete}
       update={update}
       remove={remove}
@@ -87,12 +95,12 @@ function TodoList() {
   return (
     <div className="TodoList">
       <h1>
-        Subject List <span>The List Of Subjects That You Have</span>
+        {subject} Unit List <span>The List Of Units That You Have</span>
       </h1>
       <ul>{todosList}</ul>
-      <NewSubjectForm createTodo={create} />
+      {/* <NewUnitForm createTodo={create} /> */}
     </div>
   );
 }
 
-export default TodoList;
+export default UnitList;
