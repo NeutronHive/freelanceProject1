@@ -52,9 +52,9 @@ function Quiz() {
   console.log(quizObj);
   return (
     <div className="TodoList" style={{ width: "80%", maxWidth: "100%" }}>
-      <h1>Question on {quizObj.title}</h1>
-      {quizObj.questions &&
-        quizObj.questions.map((question) => {
+      <h1>Question on {quizObj?.title}</h1>
+      {quizObj?.questions &&
+        quizObj?.questions.map((question) => {
           return (
           
                 <div className="Todo`"       style={{margin:"2rem"}}>

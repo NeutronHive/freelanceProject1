@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./Subject.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 function Subject({ todo, remove, update, toggleComplete }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -46,10 +48,10 @@ function Subject({ todo, remove, update, toggleComplete }) {
         </li>
         <div className="Todo-buttons">
           <button onClick={toggleFrom}>
-            <i className="fas fa-pen" />
+          <FontAwesomeIcon icon={faPen} />
           </button>
           <button onClick={handleClick}>
-            <i id={todo.id} className="fas fa-trash" />
+          <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>
       </div>

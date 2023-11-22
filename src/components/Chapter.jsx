@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./Subject.css";
+import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Chapter({ todo, remove, update, toggleComplete }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -42,14 +44,14 @@ function Chapter({ todo, remove, update, toggleComplete }) {
           onClick={toggleCompleted}
           className={todo.completed ? "Todo-task completed" : "Todo-task"}
         >
-          {todo.title}
+          {todo?.title}
         </li>
         <div className="Todo-buttons">
           <button onClick={toggleFrom}>
-            <i className="fas fa-pen" />
+          <FontAwesomeIcon icon={faPen} />
           </button>
           <button onClick={handleClick}>
-            <i id={todo.id} className="fas fa-trash" />
+          <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>
       </div>
