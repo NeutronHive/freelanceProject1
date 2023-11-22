@@ -47,12 +47,12 @@ function Unit({ todo, remove, update, toggleComplete }) {
           {todo.id.split("-")[1]}
         </li>
         <div className="Todo-buttons">
-          <button onClick={toggleFrom}>
+          {/* <button onClick={toggleFrom}>
           <FontAwesomeIcon icon={faPen} />
-          </button>
-          <button onClick={handleClick}>
+          </button> */}
+          {/* <button onClick={handleClick}>
           <FontAwesomeIcon icon={faTrash} />
-          </button>
+          </button> */}
         </div>
       </div>
     );

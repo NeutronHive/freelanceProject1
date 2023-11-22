@@ -50,11 +50,11 @@ function Subject({ todo, remove, update, toggleComplete }) {
           <button onClick={toggleFrom}>
           <FontAwesomeIcon icon={faPen} />
           </button>
-          <button onClick={() =>{
+          {/* <button onClick={() =>{
             handleClick(todo?.id)
           }}>
           <FontAwesomeIcon icon={faTrash} />
-          </button>
+          </button> */}
         </div>
       </div>
     );

@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Chapter({ todo, remove, update, toggleComplete }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [task, setTask] = useState(todo.task);
+  const [task, setTask] = useState(todo.title);
 
-  const handleClick = evt => {
-    remove(evt.target.id);
+  const handleClick = (id) => {
+    remove(id);
   };
   const toggleFrom = () => {
     setIsEditing(!isEditing);
@@ -50,7 +50,7 @@ function Chapter({ todo, remove, update, toggleComplete }) {
           <button onClick={toggleFrom}>
           <FontAwesomeIcon icon={faPen} />
           </button>
-          <button onClick={handleClick}>
+          <button onClick={()=>{handleClick(todo.id)}}>
           <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>
