@@ -66,7 +66,7 @@ function Quiz() {
                 <div style={{height:"1rem"}}></div>
                 {question?.options?.map((option)=>{
 
-                   return option.correct?<div className="Todo" style={{borderRadius:"20px",backgroundColor:"#23ea28"}}>{option.value}</div>:<div style={{borderRadius:"20px"}} className="Todo" >{option.value}</div>
+                   return option?.correct?<div className="Todo" style={{borderRadius:"20px",backgroundColor:"#23ea28"}}>{option.value}</div>:<div style={{borderRadius:"20px"}} className="Todo" >{option?.value}</div>
                 })}
                 
               </li>

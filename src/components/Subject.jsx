@@ -8,8 +8,8 @@ function Subject({ todo, remove, update, toggleComplete }) {
   const [isEditing, setIsEditing] = useState(false);
   const [task, setTask] = useState(todo.task);
 
-  const handleClick = evt => {
-    remove(evt.target.id);
+  const handleClick = (e) => {
+    remove(e);
   };
   const toggleFrom = () => {
     setIsEditing(!isEditing);
@@ -50,7 +50,9 @@ function Subject({ todo, remove, update, toggleComplete }) {
           <button onClick={toggleFrom}>
           <FontAwesomeIcon icon={faPen} />
           </button>
-          <button onClick={handleClick}>
+          <button onClick={() =>{
+            handleClick(todo?.id)
+          }}>
           <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>

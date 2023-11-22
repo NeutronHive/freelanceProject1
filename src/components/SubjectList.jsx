@@ -4,7 +4,7 @@ import Subject from "./Subject";
 import NewSubjectForm from "./NewSubjectForm";
 import {v1 as uuid} from "uuid"; 
 import "./SubjectList.css";
-import { collection, addDoc, getFirestore, getDocs } from "firebase/firestore";
+import { collection, updateDoc, getFirestore, getDocs, doc, deleteDoc } from "firebase/firestore";
 import firebaseConfig from "../utils/firebase.config";
 import { useNavigate } from "react-router-dom";
 const app = firebaseConfig()
@@ -21,7 +21,7 @@ async function getSubjects() {
       data: doc.data()
     });
   });
-
+  console.log(usersArray);
   const farray = [];
   const s = new Set();
   for(let i=0;i<usersArray.length;i++){
@@ -47,31 +47,49 @@ function TodoList() {
     console.log(newTodo);
     setTodos([...todos, newTodo]);
   };
-
+  const deleteFirebaseDocument = async (documentId) => {
+    try {
+      const docRef = doc(db, "topics", documentId);
+      await deleteDoc(docRef);
+      console.log("Document deleted successfully!");
+    } catch (e) {
+      console.error("Error deleting document: ", e);
+    }
+  };
+  
   const remove = id => {
     setTodos(todos.filter(todo => todo.id !== id));
+    deleteFirebaseDocument(id);
   };
 
-  const update = (id, updtedTask) => {
+  const updateFirebaseDocument = async (orignalId,data) => {
+    try {
+      const docRef = doc(db, "topics", orignalId);
+      await updateDoc(docRef, data);
+      console.log("Document updated successfully!");
+    } catch (e) {
+      console.error("Error updating document: ", e);
+    }
+  };
+
+
+  const update = async(id, updatedTask) => {
+    let newTask, orignalId;
     const updatedTodos = todos.map(todo => {
       if (todo.id === id) {
-        return { ...todo, task: updtedTask };
+        orignalId = todo.id;
+        newTask = { ...todo, id: updatedTask };
+        return newTask;
       }
       return todo;
     });
+    await updateFirebaseDocument(orignalId,newTask);
     setTodos(updatedTodos);
   };
 
   const toggleComplete = async(id) => {
     navigate(`/${id.split('-')[0]}`)
     return
-    // const updatedTodos = todos.map(todo => {
-    //   if (todo.id === id) {
-    //     return { ...todo, completed: !todo.completed };
-    //   }
-    //   return todo;
-    // });
-    // setTodos(updatedTodos);
   };
 
   const todosList = todos.map(todo => (
