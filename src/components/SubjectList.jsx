@@ -11,7 +11,7 @@ const db = getFirestore(app);
 
 
 async function getSubjects() {
-  const querySnapshot = await getDocs(collection(db, "subjects"));
+  const querySnapshot = await getDocs(collection(db, "topics"));
   const usersArray = [];
 
   querySnapshot.forEach((doc) => {
@@ -22,8 +22,13 @@ async function getSubjects() {
   });
 
   const farray = [];
+  const s = new Set();
   for(let i=0;i<usersArray.length;i++){
+    if(s.has(usersArray[i].data.id)){
+      continue;
+    }
     farray.push(usersArray[i].data);
+    s.add(usersArray[i].data.id);
   }
   return farray;
 }
@@ -57,7 +62,7 @@ function TodoList() {
 
   const toggleComplete = async(id) => {
     try {
-      const docRef = await addDoc(collection(db, "subjects"), todos);
+      const docRef = await addDoc(collection(db, "topics"), todos);
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
       console.error("Error adding document: ", e);

@@ -2,7 +2,7 @@ import React, { useState, useReducer } from "react";
 import ReactDOM from "react-dom";
 import {v1 as uuid} from "uuid"; 
 import "./NewSubjectForm.css";
-import { collection, addDoc, getFirestore } from "firebase/firestore";
+import { collection, doc, setDoc, getFirestore } from "firebase/firestore";
 import firebaseConfig from "../utils/firebase.config";
 const app = firebaseConfig()
 const db = getFirestore(app);
@@ -11,7 +11,8 @@ function NewSubjectForm({ task, createTodo }) {
   const [userInput, setUserInput] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
-      task: ""
+      task: "",
+      courseCode:""
     }
   );
 
@@ -21,7 +22,8 @@ function NewSubjectForm({ task, createTodo }) {
 
   const saveToFireBase = async(data) =>{
     try {
-      const docRef = await addDoc(collection(db, "subjects"), data);
+      const docRef = doc(db, "topics", data.id);
+      await setDoc(docRef, data);
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -29,10 +31,10 @@ function NewSubjectForm({ task, createTodo }) {
   }
   const handleSubmit = evt => {
     evt.preventDefault();
-    const newTodo = { id: uuid(), task: userInput.task };
+    const newTodo = { id: userInput.task, courseCode:userInput.courseCode, quizzes:[] };
     saveToFireBase(newTodo)
     createTodo(newTodo);
-    setUserInput({ task: "" });
+    setUserInput({ task: "", courseCode:"" });
   };
 
   return (
@@ -45,6 +47,14 @@ function NewSubjectForm({ task, createTodo }) {
         type="text"
         name="task"
         placeholder="Subject Name"
+      />
+      <input
+        value={userInput.courseCode}
+        onChange={handleChange}
+        id="courseCode"
+        type="text"
+        name="courseCode"
+        placeholder="courseCode Name"
       />
       <button>Add</button>
     </form>

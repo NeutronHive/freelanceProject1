@@ -42,7 +42,7 @@ function Subject({ todo, remove, update, toggleComplete }) {
           onClick={toggleCompleted}
           className={todo.completed ? "Todo-task completed" : "Todo-task"}
         >
-          {todo.task}
+          {todo.id.split("-")[0]}
         </li>
         <div className="Todo-buttons">
           <button onClick={toggleFrom}>
