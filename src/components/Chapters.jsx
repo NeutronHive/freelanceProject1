@@ -8,41 +8,35 @@ import "./SubjectList.css";
 import { collection, addDoc, getFirestore, getDocs } from "firebase/firestore";
 import firebaseConfig from "../utils/firebase.config";
 import Unit from "./Unit";
+import Chapter from "./Chapter";
 const app = firebaseConfig()
 const db = getFirestore(app);
 
 
-async function getSubjects(subject) {
+async function getSubjects(subject,unit) {
     
   const querySnapshot = await getDocs(collection(db, "topics"));
   const usersArray = [];
-
+  
   querySnapshot.forEach((doc) => {
+    if(doc.data().id.split('-')[0]==subject && doc.data().id.split('-')[1]==unit){
     usersArray.push({
       id: doc.id,
-      data: doc.data()
+      data: doc.data().quizzes
     });
+}   
   });
-
-  const farray = [];
-  const s = new Set();
-  for(let i=0;i<usersArray.length;i++){
-    if(s.has(usersArray[i].data.id.split('-')[1]) || usersArray[i].data.id.split('-')[0]!=subject){
-      continue;
-    }
-    farray.push(usersArray[i].data);
-    s.add(usersArray[i].data.id.split('-')[1]);
-  }
-  return farray;
+//   console.log(usersArray[0].data);
+  return usersArray[0].data;
 }
 
-function UnitList(props) {
+function Chapters(props) {
     const navigate=useNavigate();
-    const { subject } = useParams();
-    console.log(subject);
+    const {subject, unit } = useParams();
+    console.log(unit);
   const [todos, setTodos] = useState([]);
   useEffect(() => {
-    getSubjects(subject).then((data) => {
+    getSubjects(subject,unit).then((data) => {
       setTodos(data);
     });
   }, []); 
@@ -67,7 +61,7 @@ function UnitList(props) {
   };
 
   const toggleComplete = async(id) => {
-    navigate(`/${subject}/${id.split('-')[1]}`)
+    navigate(`/${subject}/${unit}/${id}`)
     return
     // const updatedTodos = todos.map(todo => {
     //   if (todo.id === id) {
@@ -79,7 +73,7 @@ function UnitList(props) {
   };
 
   const todosList = todos.map(todo => (
-    <Unit
+    <Chapter
       toggleComplete={toggleComplete}
       update={update}
       remove={remove}
@@ -91,7 +85,7 @@ function UnitList(props) {
   return (
     <div className="TodoList">
       <h1>
-        {subject} Unit List <span>The List Of Units That You Have</span>
+        {subject} {unit} List <span>The List Of topics That You Have</span>
       </h1>
       <ul>{todosList}</ul>
       {/* <NewUnitForm createTodo={create} /> */}
@@ -99,4 +93,4 @@ function UnitList(props) {
   );
 }
 
-export default UnitList;
+export default Chapters;
