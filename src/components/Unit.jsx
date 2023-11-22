@@ -8,8 +8,8 @@ function Unit({ todo, remove, update, toggleComplete }) {
   const [isEditing, setIsEditing] = useState(false);
   const [task, setTask] = useState(todo.task);
 
-  const handleClick = evt => {
-    remove(evt.target.id);
+  const handleClick =(id) => {
+    remove(id);
   };
   const toggleFrom = () => {
     setIsEditing(!isEditing);
@@ -50,9 +50,9 @@ function Unit({ todo, remove, update, toggleComplete }) {
           {/* <button onClick={toggleFrom}>
           <FontAwesomeIcon icon={faPen} />
           </button> */}
-          {/* <button onClick={handleClick}>
+          <button onClick={()=>handleClick(todo.id)}>
           <FontAwesomeIcon icon={faTrash} />
-          </button> */}
+          </button>
         </div>
       </div>
     );

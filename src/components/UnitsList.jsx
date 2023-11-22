@@ -5,7 +5,7 @@ import Subject from "./Subject";
 import NewSubjectForm from "./NewSubjectForm";
 import {v1 as uuid} from "uuid"; 
 import "./SubjectList.css";
-import { collection, addDoc, getFirestore, getDocs } from "firebase/firestore";
+import { collection, addDoc, getFirestore, getDocs ,doc,deleteDoc,where,query} from "firebase/firestore";
 import firebaseConfig from "../utils/firebase.config";
 import Unit from "./Unit";
 const app = firebaseConfig()
@@ -13,7 +13,7 @@ const db = getFirestore(app);
 
 
 async function getSubjects(subject) {
-    
+  
   const querySnapshot = await getDocs(collection(db, "topics"));
   const usersArray = [];
 
@@ -51,9 +51,52 @@ function UnitList(props) {
     console.log(newTodo);
     setTodos([...todos, newTodo]);
   };
+  const deleteTopics = async (mid) => {
+    try {
+      const unit=mid.split('-')[1]
+      const orignalId = `${subject}-${unit}`
+      const docRef = doc(db, "topics", orignalId);
+      deleteDoc(docRef)
+      .then(() => {
+        
 
+        getDocs(collection(db, "quizzes"))
+          .then((querySnapshot) => {
+            const deletePromises = [];
+            
+            querySnapshot.forEach((doc) => {
+              if(doc.id.includes(orignalId)){
+              const deletePromise = deleteDoc(doc.ref);
+              deletePromises.push(deletePromise);
+              }
+            });
+        
+            // Wait for all delete promises to complete
+            return Promise.all(deletePromises);
+          })
+          .then(() => {
+            alert('Unit successfully deleted!');
+           
+          })
+          .catch((error) => {
+            console.error('Error deleting documents:', error);
+          });
+        
+           
+            });
+          //  window.location.reload();
+        } 
+     
+      //   await setDoc(docRef, data);
+      //   console.log("Document written with ID: ", docRef.id);
+    catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  }
   const remove = id => {
+    deleteTopics(id)
     setTodos(todos.filter(todo => todo.id !== id));
+   
   };
 
   const update = (id, updtedTask) => {
