@@ -1,44 +1,42 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import {useNavigate, useParams} from 'react-router-dom'
 import Subject from "./Subject";
 import NewSubjectForm from "./NewSubjectForm";
 import {v1 as uuid} from "uuid"; 
 import "./SubjectList.css";
 import { collection, addDoc, getFirestore, getDocs } from "firebase/firestore";
 import firebaseConfig from "../utils/firebase.config";
-import { useNavigate } from "react-router-dom";
+import Unit from "./Unit";
+import Chapter from "./Chapter";
 const app = firebaseConfig()
 const db = getFirestore(app);
 
 
-async function getSubjects() {
+async function getSubjects(subject,unit) {
+    
   const querySnapshot = await getDocs(collection(db, "topics"));
   const usersArray = [];
-
+  
   querySnapshot.forEach((doc) => {
+    if(doc.data().id.split('-')[0]==subject && doc.data().id.split('-')[1]==unit){
     usersArray.push({
       id: doc.id,
-      data: doc.data()
+      data: doc.data().quizzes
     });
+}   
   });
-
-  const farray = [];
-  const s = new Set();
-  for(let i=0;i<usersArray.length;i++){
-    if(s.has(usersArray[i].data.id.split('-')[0])){
-      continue;
-    }
-    farray.push(usersArray[i].data);
-    s.add(usersArray[i].data.id.split('-')[0]);
-  }
-  return farray;
+//   console.log(usersArray[0].data);
+  return usersArray[0].data;
 }
 
-function TodoList() {
-  const navigate=useNavigate();
+function Chapters(props) {
+    const navigate=useNavigate();
+    const {subject, unit } = useParams();
+    console.log(unit);
   const [todos, setTodos] = useState([]);
   useEffect(() => {
-    getSubjects().then((data) => {
+    getSubjects(subject,unit).then((data) => {
       setTodos(data);
     });
   }, []); 
@@ -63,7 +61,7 @@ function TodoList() {
   };
 
   const toggleComplete = async(id) => {
-    navigate(`/${id.split('-')[0]}`)
+    navigate(`/${subject}/${unit}/${id}`)
     return
     // const updatedTodos = todos.map(todo => {
     //   if (todo.id === id) {
@@ -75,7 +73,7 @@ function TodoList() {
   };
 
   const todosList = todos.map(todo => (
-    <Subject
+    <Chapter
       toggleComplete={toggleComplete}
       update={update}
       remove={remove}
@@ -87,12 +85,12 @@ function TodoList() {
   return (
     <div className="TodoList">
       <h1>
-        Subject List <span>The List Of Subjects That You Have</span>
+        {subject} {unit} List <span>The List Of topics That You Have</span>
       </h1>
       <ul>{todosList}</ul>
-      <NewSubjectForm createTodo={create} />
+      {/* <NewUnitForm createTodo={create} /> */}
     </div>
   );
 }
 
-export default TodoList;
+export default Chapters;
