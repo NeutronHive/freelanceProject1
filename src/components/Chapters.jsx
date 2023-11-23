@@ -171,7 +171,8 @@ function Chapters(props) {
       <h1>
         {subject} {unit} List <span>The List Of topics That You Have</span>
       </h1>
-      <ul>{todosList}</ul>
+      {todos?.length != 0 && <ul>{todosList}</ul>}
+			{!todos&& <ul style={{color:'whitesmoke'}}>No Chapters Added Yet !</ul>}
       {/* <NewUnitForm createTodo={create} /> */}
       <NewChapterForm createTodo={create} subject={subject} unit={unit} />
     </div>

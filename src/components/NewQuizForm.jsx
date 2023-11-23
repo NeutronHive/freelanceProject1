@@ -54,8 +54,6 @@ function NewQuizForm(topic) {
 	const saveToFireBase = async (mdata) => {
 		try {
 			const orignalId = topic.topic;
-			console.log(mdata);
-			console.log(orignalId);
 			const docRef = doc(db, "quizzes", orignalId);
 			getDoc(docRef)
 				.then((docSnap) => {
@@ -93,6 +91,7 @@ function NewQuizForm(topic) {
 		setQuestion(userInput);
 	};
 	const handelImageChange = (e) => {
+    if(!e.target.files[0]) return;
     const customFileName = `${topic.topic}-${uuid()}`;
 		const file = e.target.files[0];
     const renamedFile = new File([file], customFileName, { type: file.type });

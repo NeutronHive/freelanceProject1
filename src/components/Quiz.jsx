@@ -15,8 +15,16 @@ import { useParams } from "react-router-dom";
 import NewQuizForm from "./NewQuizForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+	getStorage,
+	ref,
+	uploadBytes,
+	getDownloadURL,
+	deleteObject,
+} from "firebase/storage";
 const app = firebaseConfig();
 const db = getFirestore(app);
+const storage = getStorage();
 async function getSubjects(topic) {
   const querySnapshot = await getDocs(collection(db, "quizzes"));
   const usersArray = [];
@@ -49,10 +57,29 @@ function Quiz(title) {
   const handleAddButtonClick = () => {
     setFormVisibility(!isFormVisible);
   };
-  const handleClick = (text) => {
+
+	const deleteFileFromStorage = (filePath) => {
+		const fileRef = ref(storage, filePath);
+		deleteObject(fileRef)
+			.then(() => {
+				console.log(`File ${filePath} deleted successfully.`);
+			})
+			.catch((error) => {
+				console.error(`Error deleting file ${filePath}:`, error);
+			});
+	};
+    const getFilenameFromUrl = (downloadUrl) => {
+        const url = new URL(downloadUrl);
+        const pathSegments = url.pathname.split('/');
+        return pathSegments[pathSegments.length - 1];
+    };
+  const handleClick = (dquestion) => {
     try {
       const orignalId = topic
-      console.log(text);
+      if (dquestion.image) {
+        const name = getFilenameFromUrl(dquestion.image).replace('%2F','/');
+        deleteFileFromStorage(name);
+      }
       console.log(orignalId);
       const docRef = doc(db, "quizzes", orignalId);
       getDoc(docRef)
@@ -60,7 +87,7 @@ function Quiz(title) {
         if (docSnap.exists()) {
           const data = docSnap.data();
           const data2=data
-          data2.questions = data.questions.filter(question => question.text !== text);
+          data2.questions = data.questions.filter(question => question.text !== dquestion.text);
           updateDoc(docRef, data2).then(() => {
             alert("Question successfully deleted!");
             window.location.reload(true);
@@ -129,7 +156,7 @@ function Quiz(title) {
                   <button
                     style={{ fontSize: "1rem",backgroundColor:"transparent",border:"none",cursor:"pointer" }}
                     onClick={() => {
-                      handleClick(question.text)
+                      handleClick(question)
                     }}
                   >
                     <FontAwesomeIcon icon={faTrash} />
@@ -159,7 +186,8 @@ function Quiz(title) {
           );
         })}
 
-      {/* <ul>{todosList}</ul> */}
+      
+			{!quizObj?.questions&& <ul style={{color:'whitesmoke'}}>No Questions Added Yet !</ul>}
       <div>
         <button
           style={buttonStyle}

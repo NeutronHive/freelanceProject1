@@ -6,11 +6,13 @@ import SubjectList from './components/SubjectList';
 import UnitList from './components/UnitsList'
 import {useState} from 'react';
 import { BrowserRouter,Router,Routes,Route, RouterProvider } from 'react-router-dom';
+import NotesList from './components/NotesList';
 function App() {
   const [title,setTitle]=useState('')
   return (
    <BrowserRouter>
    <Routes>
+   <Route path='/:subject/:unit/:topic/notes' element={<NotesList title={title}/>}/>
    <Route path='/:subject/:unit/:topic/quiz' element={<Quiz title={title}/>}/>
     <Route path='/:subject/:unit/:topic' element={<InsideUnit title={title} setTitle={setTitle}/>}/>
     <Route path='/:subject/:unit' element={<Chapters title={title} setTitle={setTitle}/>}/>

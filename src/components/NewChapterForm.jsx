@@ -46,7 +46,7 @@ function NewChapterForm({ createTodo, subject, unit }) {
           const firstWord = userInput.title.split(' ').join('-');
           const word = orignalId + '-' + firstWord;
           console.log({title:userInput.title,description:userInput.description, id:word});
-          data.quizzes.push({title:userInput.title,description:userInput.description, id:word});
+          data.quizzes.push({title:userInput.title,description:userInput.description, id:word, notes:[]});
           updateDoc(docRef, data).then(() => {
             console.log("Document successfully updated!");
             });

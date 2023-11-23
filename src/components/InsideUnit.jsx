@@ -10,7 +10,7 @@ const InsideUnit = (title) => {
     <div>
     <div className="TodoList">
       <h1>
-        {title?title?.title:topic.split("-").slice(2).join(" ")} <span>The List Of options That You Have</span>
+        {topic.split("-").slice(2).join(" ")} <span>The List Of options That You Have</span>
       </h1>
       <ul >
         <li className='Todo'><a href={`/${subject}/${unit}/${topic}/quiz`}  style={{textDecoration:"none",color:"white"}}>Quiz</a></li>
