@@ -46,16 +46,17 @@ function Chapters(props) {
   const { subject, unit } = useParams();
   console.log(unit);
   const [todos, setTodos] = useState([]);
-  useEffect(() => {
-    getSubjects(subject, unit).then((data) => {
-      setTodos(data);
-    });
-  }, []);
-
   const create = (newTodo) => {
     console.log(newTodo);
     setTodos([...todos, newTodo]);
   };
+  useEffect(() => {
+    getSubjects(subject, unit).then((data) => {
+      setTodos(data);
+    });
+  }, [create]);
+
+  
   const deleteFirebaseDocument = async (documentId) => {
     try {
       const docRef = doc(db, "quizzes", documentId);

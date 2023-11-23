@@ -135,6 +135,7 @@ function Quiz(title) {
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </div>
+               {question.image != "" && <img src={question?.image} alt="question image" style={{maxWidth:'400px', maxHeight:'200px'}}/>}
                 <div style={{ height: "1rem" }}></div>
                 {question?.options?.map((option) => {
                   return option?.correct ? (

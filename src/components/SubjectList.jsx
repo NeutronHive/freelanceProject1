@@ -37,17 +37,20 @@ async function getSubjects() {
 function TodoList() {
   const navigate=useNavigate();
   const [todos, setTodos] = useState([]);
+  const create = newTodo => {
+    if (todos.some(todo => todo === newTodo)) {
+      console.log("Todo already exists!");
+    } else {
+      console.log(newTodo);
+      setTodos([...todos, newTodo]);
+    }
+  };
   useEffect(() => {
     getSubjects().then((data) => {
       setTodos(data);
     });
-  }, []); 
+  }, [create]); 
 
-  const create = newTodo => {
-    console.log(newTodo);
-    
-    setTodos([...todos, newTodo]);
-  };
   const deleteFirebaseDocument = async (documentId) => {
     try {
       const docRef = doc(db, "topics", documentId);
