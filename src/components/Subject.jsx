@@ -47,10 +47,10 @@ function Subject({ todo, remove, update, toggleComplete }) {
           {todo.id.split("-")[0]}
         </li>
         <div className="Todo-buttons">
-          <button onClick={toggleFrom}>
+          {/* <button onClick={toggleFrom}>
           <FontAwesomeIcon icon={faPen} />
-          </button>
-          {/* <button onClick={() =>{
+          </button> */}
+          {/* <button onClick={() =>{ 
             handleClick(todo?.id)
           }}>
           <FontAwesomeIcon icon={faTrash} />

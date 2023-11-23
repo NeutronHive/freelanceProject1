@@ -48,7 +48,8 @@ function Chapters(props) {
   const [todos, setTodos] = useState([]);
   const create = (newTodo) => {
     console.log(newTodo);
-    setTodos([...todos, newTodo]);
+    // setTodos([...todos, newTodo]);
+    window.location.reload();
   };
   useEffect(() => {
     getSubjects(subject, unit).then((data) => {
@@ -80,11 +81,12 @@ function Chapters(props) {
             console.log(mid);
             const toDeleteRef = doc(db, 'quizzes', mid);
             deleteDoc(toDeleteRef).then(() => {
-                alert("Chapter successfully deleted!");
+                console.log("Chapter successfully deleted!");
+                // window.location.reload();
             });
            
             });
-          //  window.location.reload();
+           
         } else {
           console.log("No such document!");
         }

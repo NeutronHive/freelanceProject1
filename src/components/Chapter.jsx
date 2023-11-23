@@ -47,9 +47,9 @@ function Chapter({ todo, remove, update, toggleComplete }) {
           {todo?.title}
         </li>
         <div className="Todo-buttons">
-          <button onClick={toggleFrom}>
+          {/* <button onClick={toggleFrom}>
           <FontAwesomeIcon icon={faPen} />
-          </button>
+          </button> */}
           <button onClick={()=>{handleClick(todo.id)}}>
           <FontAwesomeIcon icon={faTrash} />
           </button>
