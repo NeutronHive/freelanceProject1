@@ -49,7 +49,7 @@ function TodoList() {
     getSubjects().then((data) => {
       setTodos(data);
     });
-  }, [create]); 
+  }, []); 
 
   const deleteFirebaseDocument = async (documentId) => {
     try {

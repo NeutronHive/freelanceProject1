@@ -54,7 +54,7 @@ function Chapters(props) {
     getSubjects(subject, unit).then((data) => {
       setTodos(data);
     });
-  }, [create]);
+  }, [subject, unit, topic]);
 
   
   const deleteFirebaseDocument = async (documentId) => {
