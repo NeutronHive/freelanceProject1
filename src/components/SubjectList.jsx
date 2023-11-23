@@ -45,6 +45,7 @@ function TodoList() {
 
   const create = newTodo => {
     console.log(newTodo);
+    
     setTodos([...todos, newTodo]);
   };
   const deleteFirebaseDocument = async (documentId) => {

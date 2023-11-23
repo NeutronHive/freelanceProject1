@@ -141,7 +141,9 @@ function Chapters(props) {
     setTodos(updatedTodos);
   };
 
-  const toggleComplete = async (id) => {
+  const toggleComplete = async (id,mtitle) => {
+    console.log(mtitle);
+    props.setTitle(mtitle)
     navigate(`/${subject}/${unit}/${id}`);
     return;
     // const updatedTodos = todos.map(todo => {

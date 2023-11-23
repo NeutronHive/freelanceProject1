@@ -33,8 +33,9 @@ async function getSubjects(topic) {
 
   return usersArray[0];
 }
-function Quiz() {
+function Quiz(title) {
   const { subject, unit, topic } = useParams();
+  console.log("topic",title)
   const [quizObj, setQuizObj] = useState({});
   useEffect(() => {
     const f = async () => {

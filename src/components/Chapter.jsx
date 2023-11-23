@@ -22,8 +22,8 @@ function Chapter({ todo, remove, update, toggleComplete }) {
   const handleChange = evt => {
     setTask(evt.target.value);
   };
-  const toggleCompleted = evt => {
-    toggleComplete(evt.target.id);
+  const toggleCompleted =(id,mtitle) => {
+    toggleComplete(id,mtitle);
   };
 
   let result;
@@ -41,7 +41,7 @@ function Chapter({ todo, remove, update, toggleComplete }) {
       <div className="Todo">
         <li
           id={todo.id}
-          onClick={toggleCompleted}
+          onClick={()=>toggleCompleted(todo.id,todo.title)}
           className={todo.completed ? "Todo-task completed" : "Todo-task"}
         >
           {todo?.title}
