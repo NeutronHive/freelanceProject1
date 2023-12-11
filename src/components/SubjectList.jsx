@@ -12,7 +12,7 @@ const db = getFirestore(app);
 
 
 async function getSubjects() {
-  const querySnapshot = await getDocs(collection(db, "topics"));
+  const querySnapshot = await getDocs(collection(db, "courses"));
   const usersArray = [];
 
   querySnapshot.forEach((doc) => {
@@ -21,17 +21,18 @@ async function getSubjects() {
       data: doc.data()
     });
   });
+  // console.log(usersArray);
+  // const farray = [];
+  // const s = new Set();
+  // for(let i=0;i<usersArray.length;i++){
+  //   if(s.has(usersArray[i].data.id.split('-')[0])){
+  //     continue;
+  //   }
+  //   farray.push(usersArray[i].data);
+  //   s.add(usersArray[i].data.id.split('-')[0]);
+  // }
   console.log(usersArray);
-  const farray = [];
-  const s = new Set();
-  for(let i=0;i<usersArray.length;i++){
-    if(s.has(usersArray[i].data.id.split('-')[0])){
-      continue;
-    }
-    farray.push(usersArray[i].data);
-    s.add(usersArray[i].data.id.split('-')[0]);
-  }
-  return farray;
+  return usersArray;
 }
 
 function TodoList() {
@@ -53,7 +54,7 @@ function TodoList() {
 
   const deleteFirebaseDocument = async (documentId) => {
     try {
-      const docRef = doc(db, "topics", documentId);
+      const docRef = doc(db, "courses", documentId);
       await deleteDoc(docRef);
       console.log("Document deleted successfully!");
     } catch (e) {
@@ -62,6 +63,10 @@ function TodoList() {
   };
   
   const remove = id => {
+    const flag=window.confirm("Are you sure you want to delete this subject?");
+    if(!flag){
+      return;
+    }
     setTodos(todos.filter(todo => todo.id !== id));
     deleteFirebaseDocument(id);
   };
@@ -92,7 +97,7 @@ function TodoList() {
   };
 
   const toggleComplete = async(id) => {
-    navigate(`/${id.split('-')[0]}`)
+    navigate(`/${id}`)
     return
   };
 

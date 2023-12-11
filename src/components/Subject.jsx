@@ -9,6 +9,7 @@ function Subject({ todo, remove, update, toggleComplete }) {
   const [task, setTask] = useState(todo.task);
 
   const handleClick = (e) => {
+
     remove(e);
   };
   const toggleFrom = () => {
@@ -22,10 +23,9 @@ function Subject({ todo, remove, update, toggleComplete }) {
   const handleChange = evt => {
     setTask(evt.target.value);
   };
-  const toggleCompleted = evt => {
-    toggleComplete(evt.target.id);
+  const toggleCompleted = x => {
+    toggleComplete(x);
   };
-
   let result;
   if (isEditing) {
     result = (
@@ -38,10 +38,11 @@ function Subject({ todo, remove, update, toggleComplete }) {
     );
   } else {
     result = (
+
       <div className="Todo">
         <li
           id={todo.id}
-          onClick={toggleCompleted}
+          onClick={()=>toggleCompleted(todo.data.courseCode)}
           className={todo.completed ? "Todo-task completed" : "Todo-task"}
         >
           {todo.id.split("-")[0]}
@@ -50,11 +51,11 @@ function Subject({ todo, remove, update, toggleComplete }) {
           {/* <button onClick={toggleFrom}>
           <FontAwesomeIcon icon={faPen} />
           </button> */}
-          {/* <button onClick={() =>{ 
+          <button onClick={() =>{ 
             handleClick(todo?.id)
           }}>
           <FontAwesomeIcon icon={faTrash} />
-          </button> */}
+          </button>
         </div>
       </div>
     );

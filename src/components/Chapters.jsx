@@ -28,7 +28,7 @@ async function getSubjects(subject, unit) {
 
   querySnapshot.forEach((doc) => {
     if (
-      doc.data().id.split("-")[0] == subject &&
+      doc.data().courseCode == subject &&
       doc.data().id.split("-")[1] == unit
     ) {
       usersArray.push({
@@ -37,19 +37,40 @@ async function getSubjects(subject, unit) {
       });
     }
   });
-  //   console.log(usersArray[0].data);
+    console.log(usersArray[0]);
   return usersArray[0].data;
 }
+async function getTitle(subject) {
+  
+  const querySnapshot = await getDocs(collection(db, "courses"));
+  const usersArray = [];
 
+  querySnapshot.forEach((doc) => {
+    usersArray.push({
+      id: doc.id,
+      data: doc.data()
+    });
+  });
+
+  const farray = [];
+  for(let i=0;i<usersArray.length;i++){
+    // console.log(usersArray[i].data.id);
+    if(usersArray[i].data.courseCode!=subject){
+      continue;
+    }
+    farray.push(usersArray[i].data);
+  }
+  // console.log(farray);
+  return farray[0].title;
+}
 function Chapters(props) {
   const navigate = useNavigate();
   const { subject, unit } = useParams();
-  console.log(unit);
   const [todos, setTodos] = useState([]);
   const create = (newTodo) => {
     console.log(newTodo);
     // setTodos([...todos, newTodo]);
-    window.location.reload();
+    // window.location.reload();
   };
   useEffect(() => {
     getSubjects(subject, unit).then((data) => {
@@ -69,7 +90,8 @@ function Chapters(props) {
   };
   const deleteTopics = async (mid) => {
     try {
-      const orignalId = `${subject}-${unit}`
+      const title = await getTitle(subject);
+      const orignalId = `${title}-${unit}`
       const docRef = doc(db, "topics", orignalId);
       getDoc(docRef)
       .then((docSnap) => {
@@ -107,8 +129,8 @@ function Chapters(props) {
   };
   const saveToFireBase = async (mdata) => {
     try {
-      const orignalId = `${subject}-${unit}`;
-      console.log(orignalId);
+      const title = await getTitle(subject);
+      const orignalId = `${title}-${unit}`;
       const docRef = doc(db, "topics", orignalId);
       getDoc(docRef)
         .then((docSnap) => {
@@ -117,6 +139,7 @@ function Chapters(props) {
             data.quizzes=mdata;
             updateDoc(docRef, data).then(() => { 
               alert("Chapter Name successfully updated!");
+              window.location.reload();
             });
            
           } else {

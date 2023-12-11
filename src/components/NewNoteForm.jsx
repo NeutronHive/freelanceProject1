@@ -2,7 +2,7 @@ import React, { useState, useReducer } from "react";
 import ReactDOM from "react-dom";
 import {v1 as uuid} from "uuid"; 
 import "./NewSubjectForm.css";
-import { collection, doc, setDoc, getFirestore, getDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, setDoc,getDocs, getFirestore, getDoc, updateDoc } from "firebase/firestore";
 import firebaseConfig from "../utils/firebase.config";
 import { useParams } from "react-router";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -24,10 +24,33 @@ function NewNoteForm({ task, createTodo, subject, unit, topic }) {
   const handleChange = evt => {
     setUserInput({ [evt.target.name]: evt.target.value });
   };
+  async function getTitle(subject) {
+    const querySnapshot = await getDocs(collection(db, "courses"));
+    const usersArray = [];
 
+    querySnapshot.forEach((doc) => {
+      usersArray.push({
+        id: doc.id,
+        data: doc.data(),
+      });
+    });
+
+    const farray = [];
+    for (let i = 0; i < usersArray.length; i++) {
+      // console.log(usersArray[i].data.id);
+      if (usersArray[i].data.courseCode != subject) {
+        continue;
+      }
+      farray.push(usersArray[i].data);
+    }
+    // console.log(farray);
+    return farray[0].title;
+  }
   const saveToFireBase = async (mdata) => {
     try {
-        const orignalId = `${subject}-${unit}`;
+        const title= await getTitle(subject);
+        const orignalId = `${title}-${unit}`;
+        console.log(orignalId);
         const docRef = doc(db, "topics", orignalId);
         getDoc(docRef)
             .then((docSnap) => {

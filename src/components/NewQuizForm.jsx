@@ -18,13 +18,14 @@ const app = firebaseConfig();
 const db = getFirestore(app);
 
 function NewQuizForm(topic) {
-  const { subject, unit, } = useParams();
+	const { subject, unit, } = useParams();
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [userInput, setUserInput] = useReducer(
 		(state, newState) => ({ ...state, ...newState }),
 		{
 			text: "",
 			image: "",
+			details: "",
 			options: [
 				{ value: "", correct: false },
 				{ value: "", correct: false },
@@ -129,6 +130,17 @@ function NewQuizForm(topic) {
 					onChange={handelImageChange}
 					style={inputStyle}
 					placeholder='Question Image...'
+				/>
+			</label>
+			<label style={labelStyle}>
+				Details(if any):
+				<input
+					type='text'
+					onChange={(e) => {
+						setQuestion({ ...question, details: e.target.value });
+					}}
+					style={inputStyle}
+					placeholder='Details...'
 				/>
 			</label>
 

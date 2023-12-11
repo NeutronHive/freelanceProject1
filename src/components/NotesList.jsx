@@ -34,7 +34,7 @@ async function getSubjects(subject, unit, topic) {
 
 	querySnapshot.forEach((doc) => {
 		if (
-			doc.data().id.split("-")[0] == subject &&
+			doc.data().courseCode == subject &&
 			doc.data().id.split("-")[1] == unit
 		) {
 			usersArray.push({
@@ -92,13 +92,37 @@ function NotesList() {
         const pathSegments = url.pathname.split('/');
         return pathSegments[pathSegments.length - 1];
     };
+	async function getTitle(subject) {
+  
+		const querySnapshot = await getDocs(collection(db, "courses"));
+		const usersArray = [];
+	  
+		querySnapshot.forEach((doc) => {
+		  usersArray.push({
+			id: doc.id,
+			data: doc.data()
+		  });
+		});
+	  
+		const farray = [];
+		for(let i=0;i<usersArray.length;i++){
+		  // console.log(usersArray[i].data.id);
+		  if(usersArray[i].data.courseCode!=subject){
+			continue;
+		  }
+		  farray.push(usersArray[i].data);
+		}
+		// console.log(farray);
+		return farray[0].title;
+	  }
 	const deleteFirebaseDocument = async (mdata) => {
 		try {
 			if (mdata.url) {
                 const name = getFilenameFromUrl(mdata.url).replace('%2F','/');
 				deleteFileFromStorage(name);
 			}
-			const orignalId = `${subject}-${unit}`;
+			const title = await getTitle(subject);
+			const orignalId = `${title}-${unit}`;
 			const docRef = doc(db, "topics", orignalId);
 			getDoc(docRef)
 				.then((docSnap) => {
@@ -134,10 +158,39 @@ function NotesList() {
 		deleteFirebaseDocument(id);
 	};
 
-	const updateFirebaseDocument = async (orignalId, data) => {
+	const updateFirebaseDocument = async (todoid, change) => {
 		try {
+			const title = await getTitle(subject);
+			const orignalId = `${title}-${unit}`;
 			const docRef = doc(db, "topics", orignalId);
-			await updateDoc(docRef, data);
+			getDoc(docRef)
+				.then((docSnap) => {
+					if (docSnap.exists()) {
+						const data = docSnap.data();
+						data?.quizzes?.map((quiz) => {
+							if (quiz.id == topic) {
+								quiz.notes = quiz.notes.map((note) => {
+									if (note.name === todoid) {
+										// Replace the 'name' property with a new value
+										return { ...note, name: change.name }; // Replace 'newName' with your desired value
+									} else {
+										return note; // Return the unchanged note object if the condition is not met
+									}
+								});
+							}
+						});
+						updateDoc(docRef, data).then(() => {
+							alert("Notes successfully deleted!");
+						});
+                        // window.location.reload(true);   
+					} else {
+						console.log("No such document!");
+					}
+				})
+				.catch((error) => {
+					console.error("Error getting document:", error);
+				});
+		 
 			console.log("Document updated successfully!");
 		} catch (e) {
 			console.error("Error updating document: ", e);
@@ -147,13 +200,14 @@ function NotesList() {
 	const update = async (id, updatedTask) => {
 		let newTask, orignalId;
 		const updatedTodos = todos?.map((todo) => {
-			if (todo.id === id) {
-				orignalId = todo.id;
-				newTask = { ...todo, id: updatedTask };
+			if (todo.name === id) {
+				orignalId = todo.name;
+				newTask = { ...todo, name: updatedTask };
 				return newTask;
 			}
 			return todo;
 		});
+	
 		await updateFirebaseDocument(orignalId, newTask);
 		setTodos(updatedTodos);
 	};

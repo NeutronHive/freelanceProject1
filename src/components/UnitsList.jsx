@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import {useNavigate, useParams} from 'react-router-dom'
 import Subject from "./Subject";
-import NewSubjectForm from "./NewSubjectForm";
+import NewUnitForm from "./NewUnitForm";
 import {v1 as uuid} from "uuid"; 
 import "./SubjectList.css";
 import { collection, addDoc, getFirestore, getDocs ,doc,deleteDoc,where,query} from "firebase/firestore";
@@ -27,11 +27,11 @@ async function getSubjects(subject) {
   const farray = [];
   const s = new Set();
   for(let i=0;i<usersArray.length;i++){
-    if(s.has(usersArray[i].data.id.split('-')[1]) || usersArray[i].data.id.split('-')[0]!=subject){
+    // console.log(usersArray[i].data.id);
+    if(usersArray[i].data.courseCode!=subject){
       continue;
     }
     farray.push(usersArray[i].data);
-    s.add(usersArray[i].data.id.split('-')[1]);
   }
   return farray;
 }
@@ -46,7 +46,29 @@ function UnitList(props) {
       setTodos(data);
     });
   }, []); 
-
+  async function getTitle(subject) {
+  
+    const querySnapshot = await getDocs(collection(db, "courses"));
+    const usersArray = [];
+  
+    querySnapshot.forEach((doc) => {
+      usersArray.push({
+        id: doc.id,
+        data: doc.data()
+      });
+    });
+  
+    const farray = [];
+    for(let i=0;i<usersArray.length;i++){
+      // console.log(usersArray[i].data.id);
+      if(usersArray[i].data.courseCode!=subject){
+        continue;
+      }
+      farray.push(usersArray[i].data);
+    }
+    // console.log(farray);
+    return farray[0].title;
+  }
   const create = newTodo => {
     console.log(newTodo);
     setTodos([...todos, newTodo]);
@@ -54,7 +76,8 @@ function UnitList(props) {
   const deleteTopics = async (mid) => {
     try {
       const unit=mid.split('-')[1]
-      const orignalId = `${subject}-${unit}`
+      const title= await getTitle(subject);
+      const orignalId = `${title}-${unit}`
       const docRef = doc(db, "topics", orignalId);
       deleteDoc(docRef)
       .then(() => {
@@ -137,7 +160,7 @@ function UnitList(props) {
         {subject} Unit List <span>The List Of Units That You Have</span>
       </h1>
       <ul>{todosList}</ul>
-      {/* <NewUnitForm createTodo={create} /> */}
+      <NewUnitForm createTodo={create} subject={subject} />
     </div>
   );
 }

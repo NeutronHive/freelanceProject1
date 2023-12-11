@@ -22,7 +22,7 @@ function NewSubjectForm({ task, createTodo }) {
 
   const saveToFireBase = async(data) =>{
     try {
-      const docRef = doc(db, "topics", data.id);
+      const docRef = doc(db, "courses", data.id);
       await setDoc(docRef, data);
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -31,7 +31,7 @@ function NewSubjectForm({ task, createTodo }) {
   }
   const handleSubmit = evt => {
     evt.preventDefault();
-    const newTodo = { id: userInput.task, courseCode:userInput.courseCode, quizzes:[] };
+    const newTodo = { id: userInput.task, courseCode:userInput.courseCode ,title:userInput.task};
     saveToFireBase(newTodo)
     createTodo(newTodo);
     setUserInput({ task: "", courseCode:"" });

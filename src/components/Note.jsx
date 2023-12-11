@@ -14,9 +14,10 @@ function Note({ todo, remove, update, toggleComplete }) {
 	const toggleFrom = () => {
 		setIsEditing(!isEditing);
 	};
-	const handleUpdate = (evt) => {
-		evt.preventDefault();
-		update(todo.id, task);
+	const handleUpdate = (e,name) => {
+		e.preventDefault();
+		console.log(name,task);
+		update(name, task);
 		toggleFrom();
 	};
 	const handleChange = (evt) => {
@@ -30,7 +31,7 @@ function Note({ todo, remove, update, toggleComplete }) {
 	if (isEditing) {
 		result = (
 			<div className='Todo'>
-				<form className='Todo-edit-form' onSubmit={handleUpdate}>
+				<form className='Todo-edit-form' onSubmit={(e)=>handleUpdate(e,todo.name)}>
 					<input onChange={handleChange} value={task} type='text' />
 					<button>Save</button>
 				</form>
@@ -44,9 +45,9 @@ function Note({ todo, remove, update, toggleComplete }) {
 					target='_blank'
 					style={{ textDecoration: "none", color: "white" }}>
 					<li
-						id={todo.id}
+						id={todo.url}
 						className={todo.completed ? "Todo-task completed" : "Todo-task"}>
-						{todo.name}
+						{todo.name} 	
 					</li>
 				</a>
 				<div className='Todo-buttons'>
