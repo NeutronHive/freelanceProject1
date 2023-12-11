@@ -63,6 +63,11 @@ async function getTitle(subject) {
   // console.log(farray);
   return farray[0].title;
 }
+
+const handleLogout = () => {
+  localStorage.clear();
+  window.location.reload();
+};
 function Chapters(props) {
   const navigate = useNavigate();
   const { subject, unit } = useParams();
@@ -192,6 +197,32 @@ function Chapters(props) {
   ));
 
   return (
+    <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-end",
+      flexDirection: "column",
+    }}
+  >
+    <button
+      style={{
+        position: "absolute",
+        margin: "2rem",
+        padding: "0.5rem 1rem",
+        fontSize: "1rem",
+        backgroundColor: "#ff6666",
+        color: "#fff",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        transition: "background-color 0.3s",
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      }}
+      onClick={handleLogout}
+    >
+      Logout
+    </button>
     <div className="TodoList">
       <h1>
         {subject} {unit} List <span>The List Of topics That You Have</span>
@@ -200,6 +231,7 @@ function Chapters(props) {
 			{!todos&& <ul style={{color:'whitesmoke'}}>No Chapters Added Yet !</ul>}
       {/* <NewUnitForm createTodo={create} /> */}
       <NewChapterForm createTodo={create} subject={subject} unit={unit} />
+    </div>
     </div>
   );
 }

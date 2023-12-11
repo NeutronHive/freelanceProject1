@@ -57,11 +57,14 @@ async function getSubjects(subject, unit, topic) {
 	console.log(farray[0].data);
 	return farray[0].data;
 }
-
 function NotesList() {
 	const { subject, unit, topic } = useParams();
 	const navigate = useNavigate();
 	const [todos, setTodos] = useState([]);
+	const handleLogout = () => {
+		localStorage.clear();
+		window.location.reload();
+	  };
 	const create = (newTodo) => {
 		if (todos.some((todo) => todo === newTodo)) {
 			console.log("Todo already exists!");
@@ -228,6 +231,32 @@ function NotesList() {
 	));
 
 	return (
+		<div
+		style={{
+		  display: "flex",
+		  justifyContent: "space-between",
+		  alignItems: "flex-end",
+		  flexDirection: "column",
+		}}
+	  >
+		<button
+		  style={{
+			position: "absolute",
+			margin: "2rem",
+			padding: "0.5rem 1rem",
+			fontSize: "1rem",
+			backgroundColor: "#ff6666",
+			color: "#fff",
+			border: "none",
+			borderRadius: "4px",
+			cursor: "pointer",
+			transition: "background-color 0.3s",
+			boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+		  }}
+		  onClick={handleLogout}
+		>
+		  Logout
+		</button>
 		<div className='TodoList'>
 			<h1>
 				{topic} Notes List <span>The List Of Notes That You Have</span>
@@ -240,6 +269,7 @@ function NotesList() {
 				unit={unit}
 				topic={topic}
 			/>
+		</div>
 		</div>
 	);
 }

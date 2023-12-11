@@ -136,12 +136,41 @@ function Quiz(title) {
     cursor: "pointer",
     transition: "background 0.2s ease-out",
   };
-
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
   const buttonHoverStyle = {
     // backgroundColor: '#fc3d3d',
   };
   console.log(quizObj);
   return (
+    <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-end",
+      flexDirection: "column",
+    }}
+  >
+    <button
+      style={{
+        position: "absolute",
+        margin: "2rem",
+        padding: "0.5rem 1rem",
+        fontSize: "1rem",
+        backgroundColor: "#ff6666",
+        color: "#fff",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        transition: "background-color 0.3s",
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      }}
+      onClick={handleLogout}
+    >
+      Logout
+    </button>
     <div className="TodoList" style={{ width: "80%", maxWidth: "100%" }}>
       <h1>Question on {quizObj?.title}</h1>
       {quizObj?.questions &&
@@ -199,6 +228,7 @@ function Quiz(title) {
         </button>
         {isFormVisible && <NewQuizForm topic={topic} />}
       </div>
+    </div>
     </div>
   );
 }
