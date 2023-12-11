@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 function Subject({ todo, remove, update, toggleComplete }) {
+  console.log(todo);
   const [isEditing, setIsEditing] = useState(false);
   const [task, setTask] = useState(todo.task);
 
@@ -38,13 +39,16 @@ function Subject({ todo, remove, update, toggleComplete }) {
     );
   } else {
     result = (
-
       <div className="Todo">
+          {todo?.data?.image && (
+            <img src={todo.data.image} style={{ height: "50px", width:'50px', borderRadius:'50%', marginRight:'2rem'  }} alt='' srcset='' />
+          )}
         <li
           id={todo.id}
+         
           onClick={()=>toggleCompleted(todo.data.courseCode)}
-          className={todo.completed ? "Todo-task completed" : "Todo-task"}
-        >
+          className={todo.completed ? "Todo-task completed" : "Todo-task"} style={todo?.data?.image?{marginRight:'7rem'}:null}>
+        
           {todo.id.split("-")[0]}
         </li>
         <div className="Todo-buttons">

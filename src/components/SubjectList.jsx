@@ -35,7 +35,7 @@ async function getSubjects() {
   return usersArray;
 }
 
-function TodoList() {
+function TodoList({user, setUser, setUserF}) {
   const navigate=useNavigate();
   const [todos, setTodos] = useState([]);
   const create = newTodo => {
@@ -113,6 +113,7 @@ function TodoList() {
 
   return (
     <div className="TodoList">
+
       <h1>
         Subject List <span>The List Of Subjects That You Have</span>
       </h1>

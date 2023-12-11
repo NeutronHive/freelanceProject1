@@ -15,4 +15,4 @@ function firebaseConfig() {
   return app;
 }
 
-export default firebaseConfig;
+export default firebaseConfig;
